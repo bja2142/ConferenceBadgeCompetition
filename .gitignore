@@ -1,0 +1,4 @@
+instance/**
+**/__pychache__/**
+**/*.pyc
+.data/**

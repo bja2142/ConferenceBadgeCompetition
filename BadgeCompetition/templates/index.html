@@ -1,0 +1,114 @@
+{% raw %}
+<html>
+  <head>
+    <title>CLC Badge Game</title>
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300" rel="stylesheet" /> 
+    <link rel="stylesheet" type="text/css" href="static/css/main.css" />
+	<link rel="stylesheet" type="text/css" href="static/css/xz-notify-bar.css" />
+    <script type="text/javascript" src="static/js/jquery.min.js"></script>
+    <script type="text/javascript" src="static/js/jsrender.js"></script>
+	<script type="module" src="static/js/xz-notify.min.js"></script>
+    <script type="text/javascript">
+	let error_messages = {
+		"duplicate" : {
+			"type" : "info",
+			"text" : "You've already connected with this badge."
+		},
+		"invalid" : {
+			"type" : "error",
+			"text" : "You submitted an invalid badge token."
+		},
+		"success" : {
+			"type" : "success",
+			"text" : "You've successfully connected with a new badge."
+		}
+	}
+	function flash(message) {
+		let notification = $(
+			'<xz-notify type="'+message.type+
+			'" expire="7500" position="n">'+
+			message.text +
+			'</xz-notify>')[0];
+		console.log(notification);
+		document.body.appendChild(notification);
+	}
+    function show_scoreboard() {
+		if (!localStorage.getItem("badge_token")) {
+			return;
+		}
+		let post_data = {
+			"token" : localStorage.getItem("badge_token")
+		}
+		$.post("/scoreboard", post_data)
+			.done(function(data) {
+				if (data == "unauthorized") {
+					localStorage.clear();
+				}
+				let template_data = { "scores": data }
+				$("#content").empty();
+				$("#content").append($.templates("#scoreboard").render(template_data));
+				console.log(data);
+			});
+    }
+	function tag_badge(token) {
+		if (!localStorage.getItem("badge_token")) {
+			return;
+		}
+		let request_data = {
+			"tagger" : localStorage.getItem("badge_token"),
+			"tagged" : token
+		}
+		$.post("/tag", request_data)
+			.done(function(data) {
+				let error = error_messages[data];
+				if (error) {
+					flash(error_messages[data]);
+				}
+			})
+			.fail(function(data) {
+				console.log(data);	
+			})
+	}
+	function handle_hash_change() {
+		console.log("triggered");
+		let request_token = (window.location.hash || "#").substring(1);
+		window.location.hash = "";
+		if(request_token != "") {
+			if(localStorage.getItem("badge_token")) {
+				tag_badge(request_token);
+			} else {
+				localStorage.setItem("badge_token", request_token);
+			}
+		}
+		show_scoreboard();
+	}
+	$(function() {
+		$(window).on('hashchange',handle_hash_change);
+		handle_hash_change();	
+	});
+	setInterval(show_scoreboard, 30000);
+    </script>
+  </head>
+  <body>
+	<div id="content">
+		<div id="welcome_msg">
+			Please scan your badge to begin.
+		</div>
+	</div>
+	<script type="text/x-jsrender" id="scoreboard">
+	<h2>
+	Leaderboard
+	</h2>
+	<ul>
+	{{for scores}}
+	  <li>{{:#index+1}}: {{:nick}} - {{:score}} pts ({{:count}} connections)</li>
+	{{/for}}
+	</ul>
+	<br /> <br />
+	<p>
+		<a href="javascript:localStorage.clear();window.location.reload();">Pair New Badge</a>
+	</p>
+	</script>
+  </body>
+</html>
+{% endraw %}

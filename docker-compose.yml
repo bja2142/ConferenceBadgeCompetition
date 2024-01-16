@@ -1,0 +1,39 @@
+version: '2'
+
+services:
+  badgeapp:
+    build: .
+    restart: always
+    ports:
+      - "5000:5000"
+    environment:
+      - UPLOAD_FOLDER=/var/uploads
+      - DATABSE_URL=sqlite:///opt/sqlite/db.sqlite3
+      - WORKERS=1
+      - LOG_FOLDER=/var/log/CLC
+      - ACCESS_LOG=-
+      - ERROR_LOG=-
+      - REVERSE_PROXY=true
+    volumes:
+      - .data/CLC/logs:/var/log/CLC
+      - .data/sqlite:/opt/sqlite
+      - .:/opt/CLC:ro
+    networks:
+        default:
+        internal:
+
+  nginx:
+    image: nginx:stable
+    restart: always
+    volumes:
+      - ./conf/nginx/http.conf:/etc/nginx/nginx.conf
+    ports:
+      - 80:80
+      - 443:443
+    depends_on:
+      - badgeapp
+
+networks:
+    default:
+    internal:
+        internal: true

@@ -1,0 +1,17 @@
+[
+	{
+		"token" : "asdf",
+		"nickname" : "user 1",
+		"value": 1
+	},
+	{
+		"token" : "qwer",
+		"nickname" : "user 2",
+		"value": 1
+	},
+	{
+		"token" : "zxcv",
+		"nickname" : "user 3",
+		"value": 5
+	}
+]
