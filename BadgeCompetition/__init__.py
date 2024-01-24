@@ -7,7 +7,8 @@ import os
 
 from BadgeCompetition.models import (
             Badge,
-            Tag
+            Tag,
+            Group
         )
 
 
@@ -31,6 +32,31 @@ def new():
 """
 
 def load_initial_data(app):
+
+    try:
+        with open("groups.json", "r") as f:
+            data = f.read()
+    except Exception as e:
+        print("Failed to import default data:", str(e))
+        return
+    data = loads(data)
+    for group in data:
+        new_group = Group(
+            description = group["description"],
+            points = group["points"],
+            max_tags = group["max_tags"], 
+            points_after_max = group["points_after_max"],
+            can_tag= group["can_tag"]
+        )
+        app.db.session.add(new_group)
+        try:
+            app.db.session.commit()
+        except Exception as e:
+            print(str(e))
+            app.db.session.rollback()
+            continue
+        print("Adding group:", group)
+
     try:
         with open("badges.json", "r") as f:
             data = f.read()
@@ -42,12 +68,14 @@ def load_initial_data(app):
         new_badge = Badge(
                 token = badge["token"],
                 nickname = badge["nickname"],
-                value = badge["value"]
+                group = badge["group"]
                 )
         app.db.session.add(new_badge)
         try:
             app.db.session.commit()
-        except:
+        except Exception as e:
+            print(str(e))
+            app.db.session.rollback()
             continue
         print("Adding badge:", badge)
 

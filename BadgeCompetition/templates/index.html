@@ -9,6 +9,7 @@
     <script type="text/javascript" src="static/js/jsrender.js"></script>
 	<script type="module" src="static/js/xz-notify.min.js"></script>
     <script type="text/javascript">
+	let active_profile = -1;
 	let error_messages = {
 		"duplicate" : {
 			"type" : "info",
@@ -49,7 +50,28 @@
 				$("#content").append($.templates("#scoreboard").render(template_data));
 				console.log(data);
 			});
+		if (active_profile != -1) {
+			view_profile(active_profile);
+		}
     }
+	function view_profile(id) {
+		if (!localStorage.getItem("badge_token")) {
+			return;
+		}
+		let post_data = {
+			"token" : localStorage.getItem("badge_token")
+		}
+		active_profile = id;
+		$.post("/profile/"+id, post_data)
+			.done(function(data) {
+				if (data == "unauthorized") {
+					localStorage.clear();
+				}
+				$("#profile").empty();
+				$("#profile").append($.templates("#user_profile").render(data));
+				console.log(data);
+			});
+	}
 	function tag_badge(token) {
 		if (!localStorage.getItem("badge_token")) {
 			return;
@@ -90,8 +112,10 @@
     </script>
   </head>
   <body>
+	<div id="profile">
+	</div>
 	<div id="content">
-		<div id="welcome_msg">
+		<div id="welcome_msg" class="big-text">
 			Please scan your badge to begin.
 		</div>
 	</div>
@@ -101,7 +125,7 @@
 	</h2>
 	<ul>
 	{{for scores}}
-	  <li>{{:#index+1}}: {{:nick}} - {{:score}} pts ({{:count}} connections)</li>
+	  <li onclick="javascript:view_profile({{:id}})">{{:#index+1}}: {{:nick}} - {{:score}} pts ({{:count}} connections)</li>
 	{{/for}}
 	</ul>
 	<br /> <br />
@@ -109,6 +133,16 @@
 		<a href="javascript:localStorage.clear();window.location.reload();">Pair New Badge</a>
 	</p>
 	</script>
+	<script type="text/x-jsrender" id="user_profile">
+		<div class="big-text">
+			<p>Showing Details For: <strong>{{:nickname}}</strong> ({{:group}})</p>
+			<p>
+				{{props points_by_group}}
+				{{:key}}: {{:val}} ({{:~root.tags_by_group[key]}} connections) <br />
+				{{/props}}
+			</p>
+		</div>
+		</script>
   </body>
 </html>
 {% endraw %}

@@ -7,6 +7,7 @@ from sqlalchemy.orm import aliased
 from BadgeCompetition.models import (
     Badge,
     Tag,
+    Group,
     db
 )
 
@@ -31,28 +32,47 @@ def scoreboard():
         return jsonify("unauthorized")
     
     scores = []
-    taggerBadge = aliased(Badge)
-    taggedBadge = aliased(Badge)
-    score = func.sum(taggedBadge.value).label('score')
-    count = func.count(taggedBadge.value).label('score')
-    result = db.session.query(Tag, 
-            score, 
-            taggerBadge.nickname,
-            count) \
-        .join(taggerBadge, Tag.tagger == taggerBadge.id) \
-        .join(taggedBadge, Tag.tagged == taggedBadge.id) \
-        .group_by(Tag.tagger) \
-        .order_by(score.desc())
-    print(result.statement)
+    result = db.session.query(Badge).join(Group)
+    
     for row in result:
-        print(row)
-        scores.append({
-            "id": row[0].tagger,
-            "score": row[1],
-            "nick" : row[2],
-            "count" : row[3]
-                })
+        score, count = row.score
+        if score > 0:
+            scores.append({
+                "id": row.id,
+                "score": score,
+                "nick" : row.nickname,
+                "count" : count
+                    })
+        print(row.score)
+    scores.sort(key=lambda entry: entry["score"])
     return jsonify(scores)
+
+
+@pages.route('/profile/<int:id>', methods = ["POST"])
+def profile(id):
+    auth_token = request.form.get("token", False)
+    authorized = False
+    if auth_token:
+        result = db.session.query(Badge) \
+            .filter(Badge.token == auth_token)\
+            .first()
+        authorized = result != None
+    if not authorized:
+        return jsonify("unauthorized")
+    
+    response = {}
+    user= db.session.query(Badge).join(Group).filter(Badge.id == int(id)).first()
+    if user:
+        total_score, tags_by_group, points_by_group = user.score_details
+        response = {
+            "total_score": total_score,
+            "tags_by_group": tags_by_group,
+            "points_by_group" : points_by_group,
+            "nickname" : user.nickname,
+            "group" : user.group.description
+        }
+    return jsonify(response)
+
 
 
 

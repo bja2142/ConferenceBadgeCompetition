@@ -9,6 +9,10 @@ p, .text {
   font-size:20px;
 }
 
+.big-text {
+  font-size:3em;
+}
+
 li {
   list-style-type:none;
   display:block;

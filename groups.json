@@ -1,0 +1,79 @@
+[
+	{
+		"description" : "usma",
+		"points" : 3,
+		"max_tags": 5,
+        "points_after_max": 1,
+        "can_tag": true
+	},
+	{
+		"description" : "rotc",
+		"points" : 3,
+		"max_tags": 10,
+        "points_after_max": 1,
+        "can_tag": true
+	},
+	{
+		"description" : "warrant",
+		"points" : 5,
+		"max_tags": 2,
+        "points_after_max": 3,
+        "can_tag": false
+	},
+	{
+		"description" : "nco",
+		"points" : 5,
+		"max_tags": 2,
+        "points_after_max": 3,
+        "can_tag": false
+	},
+	{
+		"description" : "snco",
+		"points" : 7,
+		"max_tags": 2,
+        "points_after_max": 5,
+        "can_tag": false
+	},
+	{
+		"description" : "cgo",
+		"points" : 5,
+		"max_tags": 2,
+        "points_after_max": 3,
+        "can_tag": false
+	},
+	{
+		"description" : "fgo",
+		"points" : 7,
+		"max_tags": 2,
+        "points_after_max": 5,
+        "can_tag": false
+	},
+	{
+		"description" : "important",
+		"points" : 20,
+		"max_tags": 100,
+        "points_after_max": 0,
+        "can_tag": false
+	},
+    {
+		"description" : "og",
+		"points" : 25,
+		"max_tags": 100,
+        "points_after_max": 0,
+        "can_tag": false
+	},
+    {
+		"description" : "civ",
+		"points" : 5,
+		"max_tags": 100,
+        "points_after_max": 0,
+        "can_tag": false
+	},
+    {
+		"description" : "other",
+		"points" : 5,
+		"max_tags": 100,
+        "points_after_max": 0,
+        "can_tag": false
+	}
+]
