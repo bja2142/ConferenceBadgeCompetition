@@ -1,0 +1,43 @@
+<html>
+  <head>
+    <title>CLC Badge Puzzle Game</title>
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300" rel="stylesheet" /> 
+    <link rel="stylesheet" type="text/css" href="static/css/main.css" />
+	<link rel="stylesheet" type="text/css" href="static/css/xz-notify-bar.css" />
+    <script type="text/javascript" src="static/js/jquery.min.js"></script>
+    <script type="text/javascript" src="static/js/jsrender.js"></script>
+	<script type="module" src="static/js/xz-notify.min.js"></script>
+    <script type="text/javascript">
+      $(function() {
+        let token = localStorage.getItem("badge_token");
+        if (!token) {
+          window.location = "/";
+        }
+      });
+      function handle_form() {
+        let token = localStorage.getItem("badge_token");
+        let serial = $("#serial_field").val();
+        let form_data = {
+          "token": token,
+          "serial" : serial
+        };
+        $('<form action="puzzle/'+token+'" method="POST"><input type="hidden" name="serial" value="'+serial+'" /></form>').appendTo('body').submit();
+
+      }
+    </script>
+  </head>
+  <body>
+	<h1>CLC Badge Puzzle Game</h1>
+    <p>
+        There are five levels of puzzles associated with the CLC badge competition.
+
+        For the first level, enter your NFC badge serial number here:
+        
+        <form action="puzzle.html" method="POST" onsubmit="return false;">
+            <input type="text" name="serial" id="serial_field" value="" />
+            <input type="submit" value="submit" onclick="javascript:handle_form(); return false;" />
+        </form>
+    </p>
+  </body>
+</html>
+

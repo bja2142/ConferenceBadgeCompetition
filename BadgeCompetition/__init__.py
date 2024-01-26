@@ -7,8 +7,8 @@ import os
 
 from BadgeCompetition.models import (
             Badge,
-            Tag,
-            Group
+            Group,
+            Puzzle
         )
 
 
@@ -68,7 +68,8 @@ def load_initial_data(app):
         new_badge = Badge(
                 token = badge["token"],
                 nickname = badge["nickname"],
-                group = badge["group"]
+                group = badge["group"],
+                serial = badge.get("serial","default")
                 )
         app.db.session.add(new_badge)
         try:
@@ -78,6 +79,27 @@ def load_initial_data(app):
             app.db.session.rollback()
             continue
         print("Adding badge:", badge)
+    
+    try:
+        with open("puzzles.json", "r") as f:
+            data = f.read()
+    except Exception as e:
+        print("Failed to import default data:", str(e))
+        return
+    data = loads(data)
+    for puzzle in data:
+        new_puzzle = Puzzle(
+                flag = puzzle["flag"],
+                label = puzzle["label"]
+                )
+        app.db.session.add(new_puzzle)
+        try:
+            app.db.session.commit()
+        except Exception as e:
+            print(str(e))
+            app.db.session.rollback()
+            continue
+        print("Adding puzzle:", puzzle)
 
 def create_app():
     app = Flask(__name__)

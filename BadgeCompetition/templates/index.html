@@ -104,7 +104,19 @@
 		}
 		show_scoreboard();
 	}
+	function show_nickname() {
+		let post_data = {
+			"token" : localStorage.getItem("badge_token")
+		}
+		$.post("/nick", post_data, function(data) {
+			$("#nickname").empty();
+			$("#nickname").append($.templates("#logged_in").render(data));
+		});
+	}
 	$(function() {
+		if(localStorage.getItem("badge_token")) {
+			show_nickname();
+		}
 		$(window).on('hashchange',handle_hash_change);
 		handle_hash_change();	
 	});
@@ -113,6 +125,8 @@
   </head>
   <body>
 	<div id="profile">
+	</div>
+	<div id="nickname">
 	</div>
 	<div id="content">
 		<div id="welcome_msg" class="big-text">
@@ -130,19 +144,27 @@
 	</ul>
 	<br /> <br />
 	<p>
-		<a href="javascript:localStorage.clear();window.location.reload();">Pair New Badge</a>
+		<a href="javascript:localStorage.clear();window.location.reload();">Forget My Badge</a>
 	</p>
 	</script>
 	<script type="text/x-jsrender" id="user_profile">
-		<div class="big-text">
+		<div class="big-text" style="border: 1px dashed black;">
 			<p>Showing Details For: <strong>{{:nickname}}</strong> ({{:group}})</p>
 			<p>
 				{{props points_by_group}}
 				{{:key}}: {{:val}} ({{:~root.tags_by_group[key]}} connections) <br />
-				{{/props}}
+				{{/props}}<br />
+				Puzzle Solves: {{:puzzles}}
 			</p>
 		</div>
 		</script>
+		<script type="text/x-jsrender" id="logged_in">
+			<div class="big-text">
+				<center>
+				Hello, <span style="cursor:pointer;" onclick="javascript:view_profile({{:id}})">{{:nickname}}</a>
+				</center>
+			</div>
+			</script>
   </body>
 </html>
 {% endraw %}
