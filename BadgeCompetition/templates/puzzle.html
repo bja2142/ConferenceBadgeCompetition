@@ -4,7 +4,11 @@
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:300" rel="stylesheet" /> 
     <link rel="stylesheet" type="text/css" href="/static/css/main.css" />
     <script type="text/javascript" src="/static/js/jquery.min.js"></script>
-
+    <style type="text/css">
+        body {
+          margin:25px 100px;
+        }
+      </style>
     <script type="text/javascript">
       $(function() {
         let token = localStorage.getItem("badge_token");
@@ -22,11 +26,11 @@
   </head>
   <body>
 	<h1>CLC Badge Puzzle Game</h1>
-    <p>
+    <p class="med-text">
         There are five levels of puzzles associated with the CLC badge competition.
     </p>
         {% if level0 is not defined %}
-        <p>For the first level, enter your NFC badge serial number here:
+        <p class="med-text">For the first level, enter your NFC badge serial number here:
         
         <form method="POST" onsubmit="return false;">
             <input type="text" name="serial" id="serial_field" value="" />
@@ -38,7 +42,7 @@
         
 
         {% if level1 is not defined %}
-        <p>
+        <p class="med-text">
         Poke around to find the second level. Submit your flag here.
         
         <!--
@@ -63,7 +67,7 @@
         {% else %}
             You solved the second level. <br />
         {% if level2 is not defined %}
-        <p>
+        <p class="med-text">
         Find the flag.
 
         <pre>{% include 'level2/'+token %}</pre>
@@ -77,7 +81,7 @@
             You solved the third level. <br />
 
         {% if level3 is not defined %}
-        <p>
+        <p class="med-text">
         Find the flag.
 
         <pre>{% include 'level3/'+token %}</pre>
@@ -98,7 +102,7 @@
             You solved the fourth level. <br />
         
         {% if level4 is not defined %}
-        <p>        
+        <p class="med-text">        
         <a href="/static/level4/{{ token }}" target="_blanK">find the flag</a> <br />
         <form method="POST">
             <input type="text" name="flag4" id="flag4" value="" />

@@ -70,6 +70,7 @@
 				$("#profile").empty();
 				$("#profile").append($.templates("#user_profile").render(data));
 				console.log(data);
+				$("#profile")[0].scrollIntoView();
 			});
 	}
 	function tag_badge(token) {
@@ -147,7 +148,10 @@
 	</h2>
 	<ul>
 	{{for scores}}
-	  <li onclick="javascript:view_profile({{:id}})">{{:#index+1}}: {{:nick}} - <strong>{{:score}}pts</strong> ({{:count}}x) {{for ~repeatLoop(puzzle)}}&#x1F31F;{{/for}}
+	  <li onclick="javascript:view_profile({{:id}})">{{:#index+1}}: {{:nick}} - <strong>{{:score}}pts</strong> ({{:count}}x)
+		{{if puzzle > 0 }}
+			<br />{{for ~repeatLoop(puzzle)}}&#x1F31F;{{/for}}
+		{{/if}}
 	  </li>
 	{{/for}}
 	</ul>
