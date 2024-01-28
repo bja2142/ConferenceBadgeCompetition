@@ -15,7 +15,7 @@
       function handle_form() {
         let token = localStorage.getItem("badge_token");
         let serial = $("#serial_field").val();
-        $('<form action="puzzle/'+token+'" method="POST"><input type="hidden" name="serial" value="'+serial+'" /></form>').appendTo('body').submit();
+        $('<form action="/puzzle/'+token+'" method="POST"><input type="hidden" name="serial" value="'+serial+'" /></form>').appendTo('body').submit();
 
       }
     </script>

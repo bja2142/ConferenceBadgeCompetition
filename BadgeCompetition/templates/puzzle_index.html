@@ -18,7 +18,7 @@
           "token": token,
           "serial" : serial
         };
-        $('<form action="puzzle/'+token+'" method="POST"><input type="hidden" name="serial" value="'+serial+'" /></form>').appendTo('body').submit();
+        $('<form action="/puzzle/'+token+'" method="POST"><input type="hidden" name="serial" value="'+serial+'" /></form>').appendTo('body').submit();
 
       }
     </script>
