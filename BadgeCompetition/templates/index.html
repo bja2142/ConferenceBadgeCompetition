@@ -113,6 +113,14 @@
 			$("#nickname").append($.templates("#logged_in").render(data));
 		});
 	}
+	$.views.helpers({ //https://stackoverflow.com/a/35673071
+		repeatLoop: function( count ) {
+			if (!count) return [];
+			var repeat = [];
+			repeat[count-1] = {};
+			return repeat;
+		}
+	});
 	$(function() {
 		if(localStorage.getItem("badge_token")) {
 			show_nickname();
@@ -134,12 +142,13 @@
 		</div>
 	</div>
 	<script type="text/x-jsrender" id="scoreboard">
-	<h2>
+	<h2 class="big-text">
 	Leaderboard
 	</h2>
 	<ul>
 	{{for scores}}
-	  <li onclick="javascript:view_profile({{:id}})">{{:#index+1}}: {{:nick}} - {{:score}} pts ({{:count}} connections)</li>
+	  <li onclick="javascript:view_profile({{:id}})">{{:#index+1}}: {{:nick}} - {{:score}} pts ({{:count}} connections) {{for ~repeatLoop(puzzle)}}&#x1F31F;{{/for}}
+	  </li>
 	{{/for}}
 	</ul>
 	<br /> <br />
@@ -148,11 +157,11 @@
 	</p>
 	</script>
 	<script type="text/x-jsrender" id="user_profile">
-		<div class="big-text" style="border: 1px dashed black;">
-			<p>Showing Details For: <strong>{{:nickname}}</strong> ({{:group}})</p>
-			<p>
+		<div style="border: 1px dashed black;">
+			<p class="med-text">Showing Details For: <strong>{{:nickname}}</strong> ({{:group}})</p>
+			<p class="med-text">
 				{{props points_by_group}}
-				{{:key}}: {{:val}} ({{:~root.tags_by_group[key]}} connections) <br />
+				{{:key}}: {{:prop}} points ({{:~root.tags_by_group[key]}} connections) <br />
 				{{/props}}<br />
 				Puzzle Solves: {{:puzzles}}
 			</p>

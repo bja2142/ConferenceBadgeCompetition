@@ -13,6 +13,11 @@ p, .text {
   font-size:3em;
 }
 
+.med-text {
+  font-size:2em;
+}
+
+
 li {
   list-style-type:none;
   display:block;

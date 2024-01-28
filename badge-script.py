@@ -6,17 +6,19 @@ from ndef import message_decoder
 from re import compile
 from threading import Thread
 from time import sleep
-from requests import post
+from requests import post, get
 import pygame
-
-tag_regex = compile("https://[^/]+/#([A-Za-z0-9]+)")
+import sys
+tag_regex = compile("https://[^/]+/#([A-Za-z0-9_\-]+)")
 
 reader1_tag = False
 reader2_tag = False
 
 EOM = 0xfe
 
-tag_sound = 'smb_1-up.wav'
+tag_sound = 'new-tag.wav'
+already_tagged_sound = 'already-tagged.wav'
+error_sound = 'error.wav'
 
 tag_endpoint = "https://clc.mil.dev/tag"
 
@@ -49,8 +51,15 @@ def check_both_badges_present():
         playsound(tag_sound)
         data = { "tagger": tag1, "tagged" : tag2 }
         data2 = { "tagger": tag2, "tagged" : tag1 }
-        post(tag_endpoint, data)
-        post(tag_endpoint, data2)
+        try:
+            resp1 = post(tag_endpoint, data)
+            resp2 = post(tag_endpoint, data2)
+
+            print(resp1.text)
+            print(resp2.text)
+
+        except Exception as e:
+            print(e)
 
 def start_check_badges_thread():
     t = Thread(target=check_both_badges_present)
@@ -61,6 +70,7 @@ def parse_ndef(data):
     ndef_data = data[7:]
     
     for record in message_decoder(ndef_data):
+        print(record)
         if record.type == 'urn:nfc:wkt:U':
             token = tag_regex.match(record.uri)
             if token:
@@ -178,6 +188,14 @@ def reader2_watcher():
 
 if __name__ == '__main__':
     active = True
+    #check internet
+    while True:
+        try:
+            resp = get("https://jianmin.dev/")
+            print("online:", resp)
+            break
+        except:
+            sleep(5)
     watcher1_thread = Thread(target=reader1_watcher)
     watcher2_thread = Thread(target=reader2_watcher)
     watcher1_thread.start()
@@ -185,13 +203,18 @@ if __name__ == '__main__':
     watcher2_thread.start()
     threads.append(watcher2_thread)
     sleep(1)
-    try:
-        while True:
-            command = input("press q to quit\n")
-            if "q" in command:
-                active = False
-                break
-    except KeyboardInterrupt:
-        active = False
+    if len(sys.argv) == 2 and sys.argv[1] == "daemon":
+        print("running in daemon mode")
+        while active:
+            sleep(10)
+    else:
+        try:
+            while True:
+                command = input("press q to quit\n")
+                if "q" in command:
+                    active = False
+                    break
+        except KeyboardInterrupt:
+            active = False
     for thread in threads:
         thread.join()

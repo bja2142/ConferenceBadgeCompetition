@@ -5,6 +5,8 @@ from sqlalchemy.sql import func
 from json import loads
 import os
 
+from BadgeCompetition.routes import cache
+
 from BadgeCompetition.models import (
             Badge,
             Group,
@@ -117,6 +119,7 @@ def create_app():
         load_initial_data(app)
         from BadgeCompetition.routes import pages
         app.register_blueprint(pages)
+        cache.init_app(app)
         #app.run(debug = True)
         return app
 

@@ -12,6 +12,7 @@ xz-notify {
       0 -1px 0 0 #fff inset;
   color: #000;
   background-color: #efefef;
+  font-size:3em;
 }
 
 xz-notify[type="info"] {

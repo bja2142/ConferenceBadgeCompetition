@@ -1,11 +1,10 @@
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.sql import func
 from sqlalchemy import select
-from sqlalchemy.orm import aliased
+from sqlalchemy.orm import aliased, lazyload
 from typing import List
 
 db = SQLAlchemy()
-
 
 class Puzzle(db.Model):
    id = db.Column(db.Integer, primary_key = True)
@@ -57,8 +56,15 @@ class Badge(db.Model):
                         secondaryjoin="Badge.id==tag.c.tagged_id",
                         backref="tagger"
     )
+   
    @property
    def score_details(self):
+            
+        #tags_rc = RelationshipCache(Badge.tags, cache)
+        #solves_rc = RelationshipCache(Badge.solves, cache)
+        #cached_self = self.query.options(lazyload(Badge.solves), solves_rc).get()
+        #cached_self = cached_self.query.options(lazyload(Badge.tags), tags_rc).get()
+
         if not self.group.can_tag:
             return 0, None, None, []
         else:
@@ -111,9 +117,9 @@ class Solve(db.Model):
        db.UniqueConstraint('puzzle_id', 'badge_id', name='_unique_solve'),
     )
 
-   def __init__(self, puzzle, badge, ip):
-       self.puzle_id = puzzle
-       self.badge_id = badge
+   def __init__(self, puzzle_id, badge_id, ip):
+       self.puzzle_id = puzzle_id
+       self.badge_id = badge_id
        self.ip = ip
 
 class Tag(db.Model):
