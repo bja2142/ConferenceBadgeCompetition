@@ -2,7 +2,7 @@ body {
   font-family: 'Open Sans', sans-serif, serif;
   background-color:#eee;
   text-align:center;
-  margin:25px 100px;
+  margin:5px;
 }
 
 p, .text {
@@ -16,7 +16,10 @@ p, .text {
 .med-text {
   font-size:2em;
 }
-
+ul {
+  padding:0px;
+  margin:0px;
+}
 
 li {
   list-style-type:none;

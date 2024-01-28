@@ -147,7 +147,7 @@
 	</h2>
 	<ul>
 	{{for scores}}
-	  <li onclick="javascript:view_profile({{:id}})">{{:#index+1}}: {{:nick}} - {{:score}} pts ({{:count}} connections) {{for ~repeatLoop(puzzle)}}&#x1F31F;{{/for}}
+	  <li onclick="javascript:view_profile({{:id}})">{{:#index+1}}: {{:nick}} - <strong>{{:score}}pts</strong> ({{:count}}x) {{for ~repeatLoop(puzzle)}}&#x1F31F;{{/for}}
 	  </li>
 	{{/for}}
 	</ul>
@@ -161,7 +161,7 @@
 			<p class="med-text">Showing Details For: <strong>{{:nickname}}</strong> ({{:group}})</p>
 			<p class="med-text">
 				{{props points_by_group}}
-				{{:key}}: {{:prop}} points ({{:~root.tags_by_group[key]}} connections) <br />
+				<u>{{:key}}</u>: <strong>{{:prop}}pts</strong> ({{:~root.tags_by_group[key]}}x) <br />
 				{{/props}}<br />
 				Puzzle Solves: {{:puzzles}}
 			</p>
