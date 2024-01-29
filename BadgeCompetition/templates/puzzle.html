@@ -85,8 +85,8 @@
         {% if level2 is not defined %}
         <p class="med-text">
         Find the flag.
-
-        <pre>{% include 'level2/'+token %}</pre>
+            <br />
+        <textarea readonly="readonly" style="padding:5px; margin:0px auto; width:75%; height:100px;overflow:auto">{% include 'level2/'+token %}</textarea>
         
         <form method="POST">
             <input type="text" name="flag2" id="flag2" value="" />
