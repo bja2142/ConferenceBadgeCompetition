@@ -36,6 +36,7 @@ def handle_puzzle_request(request, token):
     serial = request.form.get("serial", False)
     if serial:
         serial = serial.lower()
+        serial = serial.replace(":","")
     flag1 = request.form.get("flag1", False)
     flag2 = request.form.get("flag2", False)
     flag3 = request.form.get("flag3", False)
@@ -49,6 +50,7 @@ def handle_puzzle_request(request, token):
     if not valid_match:
         return False, False
     if serial:
+        print(valid_match.serial, serial)
         if valid_match.serial == serial:
             puzzle_id = db.session.query(Puzzle.id) \
             .filter(Puzzle.label == "level0")\

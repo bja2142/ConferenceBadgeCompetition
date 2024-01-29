@@ -57,6 +57,7 @@
 		let post_data = {
 			"token" : localStorage.getItem("badge_token")
 		}
+		$("#welcome_msg").text("Loading...");
 		$.post("/scoreboard", post_data)
 			.done(function(data) {
 				if (data == "unauthorized") {
