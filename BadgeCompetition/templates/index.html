@@ -8,6 +8,7 @@
     <script type="text/javascript" src="static/js/jquery.min.js"></script>
     <script type="text/javascript" src="static/js/jsrender.js"></script>
 	<script type="module" src="static/js/xz-notify.min.js"></script>
+	<script type="text/javascript" src="/static/js/index.umd.js"></script>
     <script type="text/javascript">
 	let active_profile = -1;
 	let error_messages = {
@@ -33,6 +34,22 @@
 		console.log(notification);
 		document.body.appendChild(notification);
 	}
+	let fireworks_active = false;
+
+	function start_fireworks() {
+		if (!fireworks_active) {
+			fireworks_active = true;
+			container = $("<div style='width:100%;height:100%; position:absolute;top:0px; left:0px;z-index:-1;' id='fireworks_container'></div>");
+			$("body").append(container);
+			setTimeout(function() {
+				let container = document.querySelector("#fireworks_container");
+				const fireworks = new Fireworks.default(container)
+				fireworks.start();
+			}, 500);
+
+
+		}
+	}
     function show_scoreboard() {
 		if (!localStorage.getItem("badge_token")) {
 			return;
@@ -48,6 +65,13 @@
 				let template_data = { "scores": data }
 				$("#content").empty();
 				$("#content").append($.templates("#scoreboard").render(template_data));
+				for(i = 0; i < data.length; i++){
+					if (data[i].puzzle == 5 && data[i].nick == localStorage.getItem("nickname")) {
+						start_fireworks();
+						localStorage.setItem("fireworks", 1);
+						break;
+					}
+				}
 				console.log(data);
 			});
 		if (active_profile != -1) {
@@ -112,6 +136,7 @@
 		$.post("/nick", post_data, function(data) {
 			$("#nickname").empty();
 			$("#nickname").append($.templates("#logged_in").render(data));
+			localStorage.setItem("nickname", data["nickname"]);
 		});
 	}
 	$.views.helpers({ //https://stackoverflow.com/a/35673071
@@ -127,19 +152,24 @@
 			show_nickname();
 		}
 		$(window).on('hashchange',handle_hash_change);
-		handle_hash_change();	
+		handle_hash_change();
+		if(localStorage.getItem("fireworks")) {
+			start_fireworks();
+		}
 	});
 	setInterval(show_scoreboard, 30000);
     </script>
   </head>
   <body>
-	<div id="profile">
-	</div>
-	<div id="nickname">
-	</div>
-	<div id="content">
-		<div id="welcome_msg" class="big-text">
-			Please scan your badge to begin.
+	<div id="wrapper">
+		<div id="profile">
+		</div>
+		<div id="nickname">
+		</div>
+		<div id="content">
+			<div id="welcome_msg" class="big-text">
+				Please scan your badge to begin.
+			</div>
 		</div>
 	</div>
 	<script type="text/x-jsrender" id="scoreboard">
@@ -150,7 +180,7 @@
 	{{for scores}}
 	  <li onclick="javascript:view_profile({{:id}})">{{:#index+1}}: {{:nick}} - <strong>{{:score}}pts</strong> ({{:count}}x)
 		{{if puzzle > 0 }}
-			<br />{{for ~repeatLoop(puzzle)}}&#x1F31F;{{/for}}
+			<br />{{for ~repeatLoop(puzzle)}}&#x1F31F;{{/for}}{{if puzzle == 5 }}&#x1F386;{{/if}}
 		{{/if}}
 	  </li>
 	{{/for}}

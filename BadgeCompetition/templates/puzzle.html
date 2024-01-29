@@ -4,12 +4,28 @@
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:300" rel="stylesheet" /> 
     <link rel="stylesheet" type="text/css" href="/static/css/main.css" />
     <script type="text/javascript" src="/static/js/jquery.min.js"></script>
+    <script type="text/javascript" src="/static/js/index.umd.js"></script>
     <style type="text/css">
         body {
           margin:25px 100px;
         }
       </style>
     <script type="text/javascript">
+
+      let fireworks_active = false;
+
+      function start_fireworks() {
+		if (!fireworks_active) {
+			fireworks_active = true;
+			container = $("<div style='width:100%;height:100%; position:absolute;top:0px; left:0px;z-index:-1;' id='fireworks_container'></div>");
+			$("body").append(container);
+			setTimeout(function() {
+				let container = document.querySelector("#fireworks_container");
+				const fireworks = new Fireworks.default(container)
+				fireworks.start();
+			}, 500);
+		}
+	}
       $(function() {
         let token = localStorage.getItem("badge_token");
         if (!token) {
@@ -110,7 +126,11 @@
         </form>
         </p>
         {% else %}
-            You have solved the fifth level. <br />
+            You have solved the fifth level! <br />
+            <script type="text/javascript">
+                localStorage.setItem("fireworks", 1);
+                start_fireworks();
+            </script>
         {% endif %}
         {% endif %}
         {% endif %}
