@@ -4,3 +4,6 @@ live/**
 **/__pychache__/**
 **/*.pyc
 .data/**
+**/level3/**
+**/level4/**
+**/level2/**

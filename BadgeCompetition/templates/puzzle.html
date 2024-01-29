@@ -98,9 +98,7 @@
 
         {% if level3 is not defined %}
         <p class="med-text">
-        Find the flag.
-
-        <pre>{% include 'level3/'+token %}</pre>
+        <a href="/static/level3/{{ token }}" target="_blank">find the flag</a> <br />
 
         <br />
         Hint: <pre>objdump -D -b binary -m i386:x86-64 -Mx86-64 myfile</pre>
@@ -119,7 +117,7 @@
         
         {% if level4 is not defined %}
         <p class="med-text">        
-        <a href="/static/level4/{{ token }}" target="_blanK">find the flag</a> <br />
+        <a href="/static/level4/{{ token }}" target="_blanK">find the flag</a> (it's different this time) <br />
         <form method="POST">
             <input type="text" name="flag4" id="flag4" value="" />
             <input type="submit" value="submit" />
