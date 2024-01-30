@@ -140,13 +140,22 @@
 			localStorage.setItem("nickname", data["nickname"]);
 		});
 	}
+	let loop_counter = 0;
 	$.views.helpers({ //https://stackoverflow.com/a/35673071
 		repeatLoop: function( count ) {
 			if (!count) return [];
 			var repeat = [];
 			repeat[count-1] = {};
 			return repeat;
-		}
+		},
+		resetCounter: function(  ) {
+			loop_counter = 0;
+			return ""
+		},
+		nextCounter: function(  ) {
+			loop_counter +=1;
+			return loop_counter;
+		},
 	});
 	$(function() {
 		if(localStorage.getItem("badge_token")) {
@@ -178,15 +187,17 @@
 	Leaderboard (Competitive)
 	</h2>
 	<ul>
+    {{:~resetCounter()}}
 	{{for scores}}
 		{{if competitive == true}}
-	  <li onclick="javascript:view_profile({{:id}})">{{:#getIndex()+1}}: {{:nick}} - <strong>{{:score}}pts</strong> ({{:count}}x)
+	  <li onclick="javascript:view_profile({{:id}})">{{:~nextCounter()}}: {{:nick}} - <strong>{{:score}}pts</strong> ({{:count}}x)
 		{{if puzzle > 0 }}
 			<br />{{for ~repeatLoop(puzzle)}}&#x1F31F;{{/for}}{{if puzzle == 5 }}&#x1F386;{{/if}}
 		{{/if}}
 	  </li>
 	  {{/if}}
 	{{/for}}
+	{{:~resetCounter()}}
 	</ul>
 	<br /> <br />
 	<p>
@@ -197,7 +208,7 @@
 	</h2>
 	{{for scores}}
 	{{if competitive == false}}
-	<li onclick="javascript:view_profile({{:id}})">{{:#getIndex()+1}}: {{:nick}} - <strong>{{:score}}pts</strong> ({{:count}}x)
+	<li onclick="javascript:view_profile({{:id}})">{{:~nextCounter()}}: {{:nick}} - <strong>{{:score}}pts</strong> ({{:count}}x)
 	  {{if puzzle > 0 }}
 		  <br />{{for ~repeatLoop(puzzle)}}&#x1F31F;{{/for}}{{if puzzle == 5 }}&#x1F386;{{/if}}
 	  {{/if}}
