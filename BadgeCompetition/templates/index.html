@@ -175,21 +175,35 @@
 	</div>
 	<script type="text/x-jsrender" id="scoreboard">
 	<h2 class="big-text">
-	Leaderboard
+	Leaderboard (Competitive)
 	</h2>
 	<ul>
 	{{for scores}}
-	  <li onclick="javascript:view_profile({{:id}})">{{:#index+1}}: {{:nick}} - <strong>{{:score}}pts</strong> ({{:count}}x)
+		{{if competitive == true}}
+	  <li onclick="javascript:view_profile({{:id}})">{{:#getIndex()+1}}: {{:nick}} - <strong>{{:score}}pts</strong> ({{:count}}x)
 		{{if puzzle > 0 }}
 			<br />{{for ~repeatLoop(puzzle)}}&#x1F31F;{{/for}}{{if puzzle == 5 }}&#x1F386;{{/if}}
 		{{/if}}
 	  </li>
+	  {{/if}}
 	{{/for}}
 	</ul>
 	<br /> <br />
 	<p>
 		<a href="javascript:localStorage.clear();window.location.reload();">Forget My Badge</a>
 	</p>
+	<h2 class="big-text">
+		Non-Competitive Scores
+	</h2>
+	{{for scores}}
+	{{if competitive == false}}
+	<li onclick="javascript:view_profile({{:id}})">{{:#getIndex()+1}}: {{:nick}} - <strong>{{:score}}pts</strong> ({{:count}}x)
+	  {{if puzzle > 0 }}
+		  <br />{{for ~repeatLoop(puzzle)}}&#x1F31F;{{/for}}{{if puzzle == 5 }}&#x1F386;{{/if}}
+	  {{/if}}
+	</li>
+	{{/if}}
+  {{/for}}
 	</script>
 	<script type="text/x-jsrender" id="user_profile">
 		<div style="border: 1px dashed black;">

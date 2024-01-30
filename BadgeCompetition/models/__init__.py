@@ -65,35 +65,32 @@ class Badge(db.Model):
         #cached_self = self.query.options(lazyload(Badge.solves), solves_rc).get()
         #cached_self = cached_self.query.options(lazyload(Badge.tags), tags_rc).get()
 
-        if not self.group.can_tag:
-            return 0, None, None, []
-        else:
-            total_score = 0
-            tags_by_group = {}
-            points_by_group = {}
-            if self.tags:
-                for tag in self.tags:
-                    tag_group = tag.group
-                    tag_count = tags_by_group.get(tag_group.description,0)
-                    tag_count += 1
-                    tags_by_group[tag_group.description] = tag_count
-                    if tag_count > tag_group.max_tags:
-                        tag_score = tag_group.points_after_max
-                    else:
-                        tag_score = tag_group.points
-                    group_points = points_by_group.get(tag_group.description,0)
-                    points_by_group[tag_group.description] = group_points+tag_score
-                    total_score += tag_score
-            return total_score, tags_by_group, points_by_group, len(self.solves)
+        total_score = 0
+        tags_by_group = {}
+        points_by_group = {}
+        if self.tags:
+            for tag in self.tags:
+                tag_group = tag.group
+                tag_count = tags_by_group.get(tag_group.description,0)
+                tag_count += 1
+                tags_by_group[tag_group.description] = tag_count
+                if tag_count > tag_group.max_tags:
+                    tag_score = tag_group.points_after_max
+                else:
+                    tag_score = tag_group.points
+                group_points = points_by_group.get(tag_group.description,0)
+                points_by_group[tag_group.description] = group_points+tag_score
+                total_score += tag_score
+        return total_score, tags_by_group, points_by_group, len(self.solves), self.group.can_tag
 
    @property
    def score(self):
-      result, tags_by_group, _, puzzle_count = self.score_details
+      result, tags_by_group, _, puzzle_count, competitive = self.score_details
       total_count = 0
       if tags_by_group:
         for group in tags_by_group.keys():
             total_count += tags_by_group[group]
-      return result, total_count, puzzle_count
+      return result, total_count, puzzle_count, competitive
 
 
    def __init__(self, token, nickname, group, serial=""):

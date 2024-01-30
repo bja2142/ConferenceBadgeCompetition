@@ -204,6 +204,7 @@ def puzzle(token):
 def scoreboard():
     auth_token = request.form.get("token", False)
     authorized = False
+
     if auth_token:
         result = db.session.query(Badge) \
             .filter(Badge.token == auth_token)\
@@ -216,14 +217,15 @@ def scoreboard():
     result = db.session.query(Badge).join(Group)
     
     for row in result:
-        score, count, puzzle = row.score
+        score, count, puzzle, competitive = row.score
         if score > 0:
             scores.append({
                 "id": row.id,
                 "score": score,
                 "nick" : row.nickname,
                 "count" : count,
-                "puzzle": puzzle
+                "puzzle": puzzle,
+                "competitive": competitive
                     })
         #print(row.score)
     scores.sort(key=lambda entry: entry["score"], reverse=True)
@@ -246,14 +248,15 @@ def profile(id):
     user= db.session.query(Badge).join(Group).filter(Badge.id == int(id)).first()
     if user:
         print(user.solves)
-        total_score, tags_by_group, points_by_group, puzzle_count = user.score_details
+        total_score, tags_by_group, points_by_group, puzzle_count, competitive = user.score_details
         response = {
             "total_score": total_score,
             "tags_by_group": tags_by_group,
             "points_by_group" : points_by_group,
             "nickname" : user.nickname,
             "group" : user.group.description,
-            "puzzles": puzzle_count
+            "puzzles": puzzle_count,
+            "competitive": competitive
         }
     return jsonify(response)
 
