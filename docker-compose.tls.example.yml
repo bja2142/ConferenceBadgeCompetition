@@ -8,7 +8,7 @@ services:
       - "5000:5000"
     environment:
       - UPLOAD_FOLDER=/var/uploads
-      - DATABSE_URL=sqlite:///opt/sqlite/db.sqlite3
+      - DATABASE_URL=sqlite:////opt/sqlite/db.sqlite3
       - WORKERS=1
       - LOG_FOLDER=/var/log/CLC
       - ACCESS_LOG=-
