@@ -39,7 +39,7 @@ def connect_handler(tag):
             tag.ndef.records = [
                     UriRecord(URI_FORMAT.format(record["token"])),
                     TextRecord(record["nickname"]),
-                    TextRecord(record["realname"].split(" ")[-1]),
+                    TextRecord(" ".join(record["realname"].split(",")[0][1:])),
                     TextRecord("clc.mil.dev/puzzle")
                     ]
             success = True

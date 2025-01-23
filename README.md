@@ -71,4 +71,12 @@ python3 program-badges.py
 cp written_records programmed-badges-$(date +%d%b%Y.%H:%M).json
 ```
 
+4) before uploading to your server, you may want to strip out real names
+
+```
+python3 remove-realname.py
+```
+
+5) 
+
 Copy badges.json and groups.json to your server and start your app.
